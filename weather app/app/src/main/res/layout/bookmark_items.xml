@@ -1,0 +1,64 @@
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="#72FFFFFF">
+
+    <!-- RelativeLayout to hold the content inside the CardView -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <!-- ImageView to display an image -->
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/cloudy"
+            android:scaleType="fitXY"/>
+
+        <!-- LinearLayout to hold text views -->
+        <LinearLayout
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@id/imageView"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+
+            <!-- TextView to display the title -->
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cloudy"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- TextView to display the description -->
+            <TextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:text="cloudy day typically refers to a day when the sky is covered with clouds"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- ImageButton to act as a bookmark button -->
+        <ImageButton
+            android:id="@+id/bookmarkButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="20dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_baseline_bookmark_24" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

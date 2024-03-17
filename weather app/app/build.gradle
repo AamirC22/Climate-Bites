@@ -1,0 +1,80 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
+
+android {
+    namespace 'com.app.weathernews'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.app.weathernews"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    // AndroidX libraries for UI components and compatibility
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // Navigation components for managing navigation between fragments
+    implementation 'androidx.navigation:navigation-fragment:2.5.3'
+    implementation 'androidx.navigation:navigation-ui:2.5.3'
+
+    // Testing libraries for writing and running unit tests and instrumented tests
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // Lottie for rendering After Effects animations in real-time
+    def lottieVersion = "3.4.0"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+
+    // Volley for making networking easier and faster
+    implementation 'com.android.volley:volley:1.2.0'
+
+    // PaperDB for fast NoSQL-like storage of Java/Kotlin objects
+    implementation 'io.paperdb:paperdb:2.7.1'
+
+    // Retrofit for type-safe REST client and making API requests
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+    // Android-SpinKit for loading indicators animated with Android's built-in animation capabilities
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+
+    // Glide and Picasso for efficient image loading and displaying
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    implementation 'com.squareup.picasso:picasso:2.8'
+
+    // SwipeRefreshLayout for implementing the swipe-to-refresh pattern
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    // Firebase libraries for Firebase services like Cloud Messaging, Analytics, and Crashlytics
+    implementation platform('com.google.firebase:firebase-bom:32.7.2')
+    implementation("com.google.firebase:firebase-messaging")
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation("com.google.firebase:firebase-crashlytics")
+}
