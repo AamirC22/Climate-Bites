@@ -29,7 +29,7 @@ import io.paperdb.Paper;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    // UI Elements
+    // The implementation of the UI elements
     SpinKitView spinKitView;
     WebView webView;
     long pressedTime;
@@ -40,7 +40,7 @@ public class DetailsActivity extends AppCompatActivity {
     private ImageView bookmarkButton;
     private ImageView backButton;
 
-    // Data Model
+    // Data Model used
     Article newsModel;
 
     // Web URL
@@ -146,11 +146,11 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
-        // Load the web URL
+        // Loads the WEB Url
         webView.loadUrl(webUrl);
     }
 
-    // Method to check if the app is installed or not based on the URI
+    // Method to check if the app is installed or not based on the URL
     private boolean appInstalledOrNot(String uri) {
         PackageManager pm = getPackageManager();
         try {

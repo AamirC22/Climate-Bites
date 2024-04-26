@@ -40,13 +40,13 @@ public class MainActivity extends AppCompatActivity {
     // Binding for activity layout
     private ActivityMainBinding binding;
 
-    // Fragments
+    // Fragments for each section of the app
     public static Fragment homeFragment = new HomeFragment();
     Fragment teamsFragment = new BookmarkFragment();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment active = homeFragment; // Initially active fragment is homeFragment
 
-    // Flags to track current screen
+    // Flags to track current screen and see where user is
     public static boolean isHome = true;
     public static boolean isTeam = false;
 
