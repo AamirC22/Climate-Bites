@@ -34,9 +34,12 @@ import com.app.weathernews.activity.MainActivity;
 import com.app.weathernews.activity.Settings;
 import com.app.weathernews.adapters.NewsAdapter;
 import com.app.weathernews.models.Article;
+import com.app.weathernews.models.Source;
 import com.app.weathernews.network.NetworkUtils;
 import com.app.weathernews.request.EverythingRequest;
+import com.app.weathernews.request.SourcesRequest;
 import com.app.weathernews.response.ArticleResponse;
+import com.app.weathernews.response.SourcesResponse;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -52,13 +55,16 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import io.paperdb.Paper;
 
@@ -127,6 +133,10 @@ public class HomeFragment extends Fragment implements Listener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        Log.d("TAGsgsg", "onCreateView: ");
+        // Initialize RequestQueue for making API requests
+        requestQueue = Volley.newRequestQueue(getActivity());
+
         // Initialize RecyclerView and SpinKitViews
         recyclerView = view.findViewById(R.id.topicRv);
         spinKitView = view.findViewById(R.id.spin_kit);
@@ -145,8 +155,7 @@ public class HomeFragment extends Fragment implements Listener {
         notificationBtn = view.findViewById(R.id.notification_btn);
         cardView = view.findViewById(R.id.top_news);
 
-        // Initialize RequestQueue for making API requests
-        requestQueue = Volley.newRequestQueue(getActivity());
+
 
         // Initialize SpinKit animation for loading
         Sprite doubleBounce = new DoubleBounce();
@@ -180,7 +189,8 @@ public class HomeFragment extends Fragment implements Listener {
         }
 
         // Fetch data from API and load into RecyclerView
-        getData();
+       getData();
+        //getDataResources();
 
         // Set up SwipeRefreshLayout for refreshing data
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_home);
@@ -194,7 +204,7 @@ public class HomeFragment extends Fragment implements Listener {
                     arrayList = new ArrayList<>();
                 }
                 isnew = true;
-                getData();// Refresh data from API
+               // getData();// Refresh data from API
                 // Delay for one second before stopping refresh animation
                 Handler handler = new Handler();
                 final Runnable r = new Runnable() {
@@ -225,13 +235,7 @@ public class HomeFragment extends Fragment implements Listener {
 
     // Method to fetch data from API
     private void getData() {
-        // Check if the device is connected to the internet
-        if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            // If connected to the internet, proceed with the API request
-        } else {
-            // If not connected to the internet, display a toast message
-            Toast.makeText(getActivity(), "No Internet connection...", Toast.LENGTH_SHORT).show();
-        }
+
 
         // Instantiate a NewsApiClient object with the API key
         NewsApiClient newsApiClient = new NewsApiClient("ac525019c81a43fabb8e3c2cbda45225");
@@ -245,9 +249,12 @@ public class HomeFragment extends Fragment implements Listener {
                     @Override
                     public void onSuccess(ArticleResponse response) {
                         // If the API request is successful, handle the response
-
+                        if (!isAdded()) {
+                            return;
+                        }
                         // Log the response for debugging purposes
                         Log.d("TrendingResponse", response.toString());
+                        arrayList.clear();
 
                         // Set the data loading flag to true
                         isDataLoaded = true;
@@ -260,6 +267,7 @@ public class HomeFragment extends Fragment implements Listener {
                         // Store the articles retrieved from the response in the array list
                         arrayList = response.getArticles();
 
+                        Log.d("arraylist", "onSuccess: "+arrayList.toString());
                         // Set the adapter for the recycler view to display the articles
                         setAdapter();
 
@@ -270,8 +278,7 @@ public class HomeFragment extends Fragment implements Listener {
                         if (topNews.getUrlToImage() != null && !topNews.getUrlToImage().isEmpty()) {
 
                             // If the image URL is available, load the image using Glide
-                            Glide
-                                    .with(getContext())
+                            Glide.with(requireActivity())
                                     .load(topNews.getUrlToImage())
                                     .listener(new RequestListener<Drawable>() {
                                         @Override
@@ -316,6 +323,7 @@ public class HomeFragment extends Fragment implements Listener {
 
                     @Override
                     public void onFailure(Throwable throwable) {
+                        Log.d("TAGdfgsdf", "onFailure: "+throwable);
                         // If the API request fails, set the data loading flag to false
                         isDataLoaded = false;
 
@@ -390,13 +398,14 @@ public class HomeFragment extends Fragment implements Listener {
         Log.d("thisssss", "onResumeView:Run ");
         // Call the superclass onResume method
         super.onResume();
+        getData();
         // Update the RecyclerView adapter to reflect any changes in data
         setAdapter();
     }
 
     // Method to set the adapter on the RecyclerView and display the articles
     private void setAdapter() {
-        // Sort the list of articles based on their published date in descending order
+         //Sort the list of articles based on their published date in descending order
         Collections.sort(arrayList, new Comparator<Article>() {
             @Override
             public int compare(Article article1, Article article2) {
@@ -412,10 +421,14 @@ public class HomeFragment extends Fragment implements Listener {
             // Handle the case where the arrayList is empty
         }
 
+        if (isAdded()) {
+            // Fragment is attached to an activity, so it's safe to access context
+            adapter = new NewsAdapter(requireContext(), arrayList);
+            // Set the adapter on the RecyclerView
+            recyclerView.setAdapter(adapter);
+        }
         // Create a new instance of the NewsAdapter with the sorted list of articles
-        adapter = new NewsAdapter(getContext(), arrayList);
-        // Set the adapter on the RecyclerView
-        recyclerView.setAdapter(adapter);
+
         // Disable nested scrolling for better performance
         recyclerView.setNestedScrollingEnabled(false);
         // Notify the adapter that the data set has changed
@@ -423,5 +436,6 @@ public class HomeFragment extends Fragment implements Listener {
         // Set the layout manager for the RecyclerView (2 columns grid layout)
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
     }
+
 
 }

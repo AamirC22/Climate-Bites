@@ -13,6 +13,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.app.weathernews.R;
 import com.app.weathernews.activity.MainActivity;
+import com.app.weathernews.activity.SplashActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -31,11 +32,13 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
     // body from the message passed in FCM
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
+        Log.d("TAGdfs", "onMessageReceived: ");
+        Paper.init(this);
+        Paper.book().write("isFromNotification",true);
+
         if (remoteMessage.getNotification() != null) {
-            // Since the notification is received directly
-            // from FCM, the title and the body can be
-            // fetched directly as below.
-            Paper.init(this);
+
             boolean isNotificationAllowed = Paper.book().read("isNotificationEnabled", false);
             if (isNotificationAllowed) {
                 showNotification(
@@ -61,7 +64,7 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         // next Activity
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 
         // Create a Builder object using NotificationCompat
         // class. This will allow control over all the flags

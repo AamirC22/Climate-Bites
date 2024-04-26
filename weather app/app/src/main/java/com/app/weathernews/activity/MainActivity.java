@@ -130,4 +130,31 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        boolean isFromNotification = Paper.book().read("isFromNotification",false);
+        if (isFromNotification){
+
+            fm.beginTransaction().remove(active).commit();
+
+            homeFragment = new HomeFragment();
+            fm.beginTransaction().add(R.id.nav_host_fragment, homeFragment, "1").commit();
+
+            // Update the active fragment
+            active = homeFragment;
+
+            // Reset flags
+            isHome = true;
+            isTeam = false;
+
+            Paper.book().write("isFromNotification", false);
+        }
+        Log.d("zdfdsf", "onResume: ");
+    }
+
+
 }

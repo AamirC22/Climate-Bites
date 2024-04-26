@@ -12,7 +12,7 @@ public class SourcesRequest {
     private String country;
 
     // Private constructor that takes a Builder object
-    private SourcesRequest(Builder builder) {
+    public SourcesRequest(Builder builder) {
         this.category = builder.category;
         this.language = builder.language;
         this.country = builder.country;

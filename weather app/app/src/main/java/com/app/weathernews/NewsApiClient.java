@@ -13,9 +13,13 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -80,11 +84,21 @@ public class NewsApiClient {
     }
 
     // Method to fetch news sources from the API
-    public void getSources(SourcesRequest sourcesRequest, final SourcesCallback callback) {
+    public void getSources(SourcesRequest sourcesRequest, List<String> sources, final SourcesCallback callback) {
         query = createQuery();
-        query.put("category", sourcesRequest.getCategory());
-        query.put("language", sourcesRequest.getLanguage());
-        query.put("country", sourcesRequest.getCountry());
+        // Extract query parameters from SourcesRequest object
+        String category = sourcesRequest.getCategory();
+        String language = sourcesRequest.getLanguage();
+        String country = sourcesRequest.getCountry();
+
+        query.put("category", category);
+        query.put("language", language);
+        query.put("country", country);
+
+        // Add the sources to the query if provided
+        if (sources != null && !sources.isEmpty()) {
+            query.put("sources", String.join(",", sources));
+        }
 
         query.values().removeAll(Collections.singleton(null));
 
@@ -151,7 +165,7 @@ public class NewsApiClient {
         // Create query parameters for the API request
         query = createQuery();
         query.put("q", everythingRequest.getQ()); // Add search query parameter
-        query.put("sources", everythingRequest.getSources()); // Add sources parameter
+        query.put("sources", String.join(",", Constants.ALLOWED_SOURCES));// Add sources parameter
         query.put("domains", everythingRequest.getDomains()); // Add domains parameter
         query.put("from", everythingRequest.getFrom()); // Add from date parameter
         query.put("to", everythingRequest.getTo()); // Add to date parameter
