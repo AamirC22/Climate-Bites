@@ -5,14 +5,14 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
-    <!-- Fragment for the home screen -->
+    <!-- The implementation of the Fragment for the Home Screen -->
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.app.weathernews.fragment.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
-    <!-- Fragment for the bookmark screen -->
+    <!-- This is the implementation of the Fragment for the Bookmark Screen -->
     <fragment
         android:id="@+id/navigation_bookmark"
         android:name="com.app.weathernews.fragment.BookmarkFragment"

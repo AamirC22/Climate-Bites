@@ -8,14 +8,15 @@ import android.os.Handler;
 
 import com.app.weathernews.R;
 
+// Simple Splash Activity with a Handler : https://gist.github.com/dlfinis/ed29b7fd43f9792acb54 Author : dlfinis , Accessed 28/04/2024
+
 public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
-        // Delay for 2 seconds before moving to the Main Screen
+        // The post delayed causes a short delay of 2 seconds before moving the user to the fragment of the main screen
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

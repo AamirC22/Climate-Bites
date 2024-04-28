@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Menu item for the home navigation -->
+    <!-- The item on the Menu for the Home navigation bar -->
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/title_home" />
 
-    <!-- Menu item for the bookmark navigation -->
+    <!-- The item on the menu used for the bookmark navigation -->
     <item
         android:id="@+id/navigation_bookmark"
         android:icon="@drawable/bookmark_white"

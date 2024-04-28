@@ -7,12 +7,12 @@
     android:elevation="3dp"
     app:cardCornerRadius="10dp">
 
-    <!-- RelativeLayout to hold the content of the card view -->
+    <!-- A relative layout that is used to hold the view of a card in the layout -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- ImageView to display the image -->
+        <!-- ImageView to display the image in the Background -->
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:visibility="invisible"
             android:src="@drawable/cloudy" />
 
-        <!-- LinearLayout to hold the text content -->
+        <!-- LinearLayout that holds the text content in the screen -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,14 +44,14 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <!-- LinearLayout to hold the author and time -->
+            <!-- LinearLayout to hold the author and titles in the articles-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginBottom="5dp">
 
-                <!-- TextView for the author -->
+                <!-- TextView for the author of the articles -->
                 <TextView
                     android:id="@+id/authorTextView"
                     android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
                     android:textColor="@color/green"
                     android:textSize="14sp" />
 
-                <!-- TextView for the time -->
+                <!-- TextView for the time that the articles were published -->
                 <TextView
                     android:id="@+id/timeTextView"
                     android:layout_width="wrap_content"
@@ -72,7 +72,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ImageButton for bookmarking -->
+        <!-- ImageButton for bookmarking and unbookmarking, different sizes -->
         <ImageButton
             android:id="@+id/bookmarkButton"
             android:layout_width="40dp"
@@ -82,7 +82,7 @@
             android:elevation="5dp"
             android:src="@drawable/baseline_bookmark_black" />
 
-        <!-- SpinKitView for displaying loading progress -->
+        <!-- SpinKitView for displaying the progress of the loading bar while the application is loading -->
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/image_progress"
             style="@style/SpinKitView.DoubleBounce"
