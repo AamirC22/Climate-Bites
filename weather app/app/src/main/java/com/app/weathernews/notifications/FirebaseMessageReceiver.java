@@ -19,17 +19,19 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import io.paperdb.Paper;
 
+// FirebaseMessageReceiver class from https://origin.geeksforgeeks.org/how-to-push-notification-in-android-using-firebase-cloud-messaging/
+// Date of article 12 Dec 2022, Author: aayushitated2000
+
+// Main class for Integration of Firebase into the Application
 public class FirebaseMessageReceiver extends FirebaseMessagingService {
 
-    // Override onNewToken to get new token
+    // This override makes the application receive a new token
     @Override
     public void onNewToken(@NonNull String token) {
         Log.d("onNotificationReceive", "Refreshed token: " + token);
     }
-
-    // Override onMessageReceived() method to extract the
-    // title and
-    // body from the message passed in FCM
+    // This overrides the onMessageReceived method in order the get the title and the body
+    // of the message sent via Firebase Cloud notifications system
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
@@ -38,36 +40,30 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         Paper.book().write("isFromNotification",true);
 
         if (remoteMessage.getNotification() != null) {
-
+        // If the notifications are allowed, then get the title and the body of the notification
             boolean isNotificationAllowed = Paper.book().read("isNotificationEnabled", false);
             if (isNotificationAllowed) {
                 showNotification(
                         remoteMessage.getNotification().getTitle(),
                         remoteMessage.getNotification().getBody());
             } else {
-                // Notification is not allowed, do nothing
+                // Nothing occurs as the notifications are not allowed to be sent
             }
         }
     }
-
-    // Method to display the notifications
+    // showNotification method from https://origin.geeksforgeeks.org/how-to-push-notification-in-android-using-firebase-cloud-messaging/
+    // Date of article 12 Dec 2022, Author: aayushitated2000
+    // Method used to show the notifications on the application
     public void showNotification(String title, String message) {
-        // Pass the intent to switch to the MainActivity
+        // The intent is used to check if the user wants to switch to the Main Activity Class
         Intent intent = new Intent(this, MainActivity.class);
-        // Assign channel ID
         String channel_id = "notification_channel";
-        // Here FLAG_ACTIVITY_CLEAR_TOP flag is set to clear
-        // the activities present in the activity stack,
-        // on the top of the Activity that is to be launched
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        // Pass the intent to PendingIntent to start the
-        // next Activity
+        // This passes the intent from the other intent in order for the application to know to start the next activity or not
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
-
-        // Create a Builder object using NotificationCompat
-        // class. This will allow control over all the flags
+        // This creates an object using NotificationCompat by using a builder tha has control over the flags
         NotificationCompat.Builder builder = new NotificationCompat
                 .Builder(getApplicationContext(), channel_id)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -79,18 +75,16 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
         builder = builder.setContentTitle(title)
                 .setContentText(message)
                 .setSmallIcon(R.drawable.ic_launcher_foreground);
-        // Create an object of NotificationManager class to
-        // notify the
-        // user of events that happen in the background.
+        // This creates a new class of notificationManager and then gives it a system service to notify of different events
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        // Check if the Android Version is greater than Oreo
+        // This checks what the android version is and if it is a newer version of Oreo
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(
                     channel_id, "web_app",
                     NotificationManager.IMPORTANCE_HIGH);
             notificationManager.createNotificationChannel(notificationChannel);
         }
-
+        // This builds the object then provides the notification
         notificationManager.notify(0, builder.build());
     }
 }

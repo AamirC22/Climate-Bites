@@ -29,7 +29,7 @@ import io.paperdb.Paper;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    // The implementation of the UI elements
+    // This is the implementation of the different UI Elements
     SpinKitView spinKitView;
     WebView webView;
     long pressedTime;
@@ -40,13 +40,11 @@ public class DetailsActivity extends AppCompatActivity {
     private ImageView bookmarkButton;
     private ImageView backButton;
 
-    // Data Model used
+    // This is the data model that ive chosen to use
     Article newsModel;
-
-    // Web URL
     String webUrl;
 
-    // Bookmarked items
+    // This is an array for all the articles that are Bookmarked
     private ArrayList<Article> bookMarked;
 
     @Override
@@ -54,14 +52,12 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        // Initializing UI Elements
+        // This initialises all the UI Elements into the Application
         bookmarkButton = findViewById(R.id.bookmarkButton);
         backButton = findViewById(R.id.backbutton);
-
-        // Initializing Data Model
         newsModel = new Article();
 
-        // Retrieving bookmarked items from local database
+        // This retrieves bookmarked articles from the bookmarked Array
         bookMarked = Paper.book().read("bookmarked_items", new ArrayList<>());
 
         // Retrieving article details passed from previous activity
@@ -71,14 +67,14 @@ public class DetailsActivity extends AppCompatActivity {
             webUrl = article.getUrl();
         }
 
-        // Checking if the article is bookmarked or not
+        // This checks if an article is bookmarked or not, and if not the appearance changes
         if (bookMarked.contains(article)) {
             bookmarkButton.setImageResource(R.drawable.bookmark_white);
         } else {
             bookmarkButton.setImageResource(R.drawable.baseline_bookmark_border_24);
         }
 
-        // Back button click listener
+        // This method checks if the back button is clicked or not
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,7 +82,7 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
-        // Bookmark button click listener
+        // This method checks if the bookmark is clicked or not and changes the appearance
         bookmarkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,12 +93,13 @@ public class DetailsActivity extends AppCompatActivity {
                     bookMarked.add(article);
                     bookmarkButton.setImageResource(R.drawable.bookmark_white);
                 }
-                // Writing updated data to local database
+                // This updates the data to the database that is local
                 Paper.book().write("bookmarked_items", bookMarked);
             }
         });
 
-        // Initializing WebView and SpinKitView for loading indicator
+        // This initialises the Views for the loading indicator for the application
+        // It then loads the Sprites 
         spinKitView = findViewById(R.id.spin_kit);
         webView = findViewById(R.id.webview);
         Sprite doubleBounce = new DoubleBounce();
