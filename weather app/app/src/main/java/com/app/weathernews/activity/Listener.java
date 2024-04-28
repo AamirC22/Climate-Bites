@@ -1,11 +1,11 @@
 package com.app.weathernews.activity;
 
-// Interface to handle bottom navigation click events and data loading
+// This is an interface that is able to handle click events in the bottom navigation bar and loads data
 public interface Listener {
 
-    // Method to handle bottom navigation click
+    // This handles bottom navigation clicks on the bar
     void onBottomNavClick();
 
-    // Method to load data with an option to clear existing list
+    // This clears existing lists and is a method to load Data
     void LoadData(boolean clearList);
 }

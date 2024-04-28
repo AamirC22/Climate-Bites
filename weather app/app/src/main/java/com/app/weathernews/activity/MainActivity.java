@@ -37,16 +37,16 @@ import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Binding for activity layout
+    // This is the binding for the layout of the activity
     private ActivityMainBinding binding;
 
-    // Fragments for each section of the app
+    // Initialising each fragment and section of the application
     public static Fragment homeFragment = new HomeFragment();
     Fragment teamsFragment = new BookmarkFragment();
     final FragmentManager fm = getSupportFragmentManager();
-    Fragment active = homeFragment; // Initially active fragment is homeFragment
+    Fragment active = homeFragment; // The default fragment when the app opens is the home Fragment
 
-    // Flags to track current screen and see where user is
+    // Variables that check where the user is and which fragment they are on
     public static boolean isHome = true;
     public static boolean isTeam = false;
 
@@ -56,10 +56,11 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Initialize Firebase
+        // Initialises Firebase App into the application
         FirebaseApp.initializeApp(MainActivity.this);
 
-        // Handle push notifications from Firebase
+        // Method to handle the notifications received from Firebase
+        // A token is generated and then there is a check to ensure if the task is successful or not
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
@@ -68,13 +69,15 @@ public class MainActivity extends AppCompatActivity {
                             Log.w("tokenTEst", "Fetching FCM registration token failed", task.getException());
                             return;
                         }
-                        // Get new FCM registration token
+                        // Gets a new FCM Registration Token
                         String token = task.getResult();
                         Log.d("tokenTEst", token);
                     }
                 });
 
-        // Check internet connection
+
+        // Ensures that the user has internet connection
+        // If the user does not have internet, there is an error shown on the screen
         if (NetworkUtils.isNetworkAvailable(getApplicationContext())) {
             // Connected to the internet
         } else {
@@ -82,16 +85,16 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "No Internet connection...", Toast.LENGTH_SHORT).show();
         }
 
-        // Initialize bottom navigation
+        // This initialises the bottom Navigation bar
         BottomNavigationView navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        // Add fragments to fragment manager
+        // This adds the different fragments such as nav host and teamsFrag to the fragment manager
         fm.beginTransaction().add(R.id.nav_host_fragment, teamsFragment, "2").hide(teamsFragment).commit();
         fm.beginTransaction().add(R.id.nav_host_fragment, homeFragment, "1").commit();
     }
 
-    // Bottom navigation click listener
+    // This sets a listener that checks regarding the Bottom navigation bar
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -99,28 +102,29 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home: // Home fragment
                     isTeam = false;
-                    if (isHome) { // If already in home fragment
+                    if (isHome) { // This checks if the user is already in the Home main activity fragment
                         HomeFragment home = (HomeFragment) homeFragment;
                         home.onBottomNavClick();
                         active = homeFragment;
-                    } else { // If navigating to home fragment from another fragment
+                    } else { // Checks if the user is navigating to the Home main activity fragment from another fragment
                         fm.beginTransaction().hide(active).show(homeFragment).commit();
                         active = homeFragment;
                         isHome = true;
                         homeFragment.onResume();
                     }
                     return true;
-
+                // Sets a case that checks regarding the bookmark fragment
                 case R.id.navigation_bookmark: // Bookmark fragment
                     isHome = false;
-                    if (isTeam) { // If already in bookmark fragment
+                    if (isTeam) { // This is true if the user is already in the bookmark fragment
                         BookmarkFragment team = (BookmarkFragment) teamsFragment;
                         team.onBottomNavClick();
                         active = teamsFragment;
-                    } else { // If navigating to bookmark fragment from another fragment
+                    } else { // Checks if the user is navigating to the bookmark fragment from another fragment
                         fm.beginTransaction().hide(active).show(teamsFragment).commit();
                         BookmarkFragment home = (BookmarkFragment) teamsFragment;
                         home.LoadData(false);
+                        // Sets the active fragment of the user to bookmark fragment
                         active = teamsFragment;
                         isTeam = true;
                         teamsFragment.onResume();
@@ -140,17 +144,17 @@ public class MainActivity extends AppCompatActivity {
         if (isFromNotification){
 
             fm.beginTransaction().remove(active).commit();
-
+            // Creates a new home fragment
             homeFragment = new HomeFragment();
             fm.beginTransaction().add(R.id.nav_host_fragment, homeFragment, "1").commit();
 
-            // Update the active fragment
+            // This changes the active fragment that the user is on back to the Home Fragment
             active = homeFragment;
 
-            // Reset flags
+            // The flags on where the user is are reset, and user is sent to home page
             isHome = true;
             isTeam = false;
-
+            // This resets the notification flag and makes it back to true
             Paper.book().write("isFromNotification", false);
         }
         Log.d("zdfdsf", "onResume: ");
