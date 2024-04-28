@@ -7,7 +7,7 @@
     app:cardCornerRadius="10dp"
     app:cardBackgroundColor="#72FFFFFF">
 
-    <!-- RelativeLayout to hold the content inside the CardView -->
+    <!-- Holds the content inside the card view using Relative layout-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
             android:src="@drawable/cloudy"
             android:scaleType="fitXY"/>
 
-        <!-- LinearLayout to hold text views -->
+        <!-- Holds the text views using Linear layout-->
         <LinearLayout
             android:layout_width="170dp"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             android:layout_marginTop="10dp"
             android:orientation="vertical">
 
-            <!-- TextView to display the title -->
+            <!-- TextView to display the title of the article when opened -->
             <TextView
                 android:id="@+id/titleTextView"
                 android:layout_width="wrap_content"
@@ -39,17 +39,17 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <!-- TextView to display the description -->
+            <!-- Displays the Description-->
             <TextView
                 android:id="@+id/descriptionTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
-                android:text="cloudy day typically refers to a day when the sky is covered with clouds"
+                android:text="This is a test"
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <!-- ImageButton to act as a bookmark button -->
+        <!-- Uses an Image button that essentially acts as a Bookmark Button-->
         <ImageButton
             android:id="@+id/bookmarkButton"
             android:layout_width="40dp"

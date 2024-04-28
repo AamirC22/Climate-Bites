@@ -6,8 +6,9 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     tools:context=".activity.SplashActivity">
+    <!-- This relates to when the Splash activity fragment is active when the App is opened -->
 
-    <!-- LinearLayout to vertically center its children -->
+    <!-- LinearLayout to vertically center the children within it -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,7 +16,8 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <!-- LottieAnimationView for displaying animation -->
+        <!-- This utilises a Lottie Animation in order to play the loading animation -->
+        <!-- It involves a cloud animation that has rainfall coming down from it -->
         <com.airbnb.lottie.LottieAnimationView
             android:layout_width="150dp"
             android:layout_height="150dp"

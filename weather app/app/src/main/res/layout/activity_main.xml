@@ -4,7 +4,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <!-- FrameLayout to host the navigation fragments -->
+    <!-- FrameLayout to host the fragments involved in Navigation -->
 
     <FrameLayout
         android:id="@+id/nav_host_fragment"
@@ -14,8 +14,9 @@
         android:layout_above="@+id/nav_view"
         app:defaultNavHost="true"
         app:navGraph="@navigation/mobile_navigation" />
-    <!-- BottomNavigationView for navigating between different destinations -->
+    <!-- A bottom navigation bar used for the bottom navigation between Fragments-->
 
+    <!-- A Bottom navigation view that is used for easy navigation between Fragments-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="match_parent"

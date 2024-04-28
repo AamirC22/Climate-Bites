@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Toolbar -->
+    <!-- The implementation of the Top toolbar with a back button  -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -14,12 +14,12 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         android:layout_alignParentTop="true">
 
-        <!-- Relative layout to hold toolbar content -->
+        <!-- Holds the toolbar content within a Relative Layout -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- Back button -->
+            <!-- Implementation of the Back button in the Action bar-->
             <ImageView
                 android:id="@+id/backButton"
                 android:layout_width="30dp"
@@ -30,7 +30,7 @@
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/baseline_arrow_back_24" />
 
-            <!-- Title -->
+            <!-- This shows the Title and Navigation bar at the top -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,13 +43,13 @@
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- Container for settings -->
+    <!-- This is a container for the Notifications Settings Page -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp">
 
-        <!-- Label for news notifications -->
+        <!-- This acts as a label for the Notifications page and describes it -->
         <TextView
             android:id="@+id/labelTextView"
             android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
             android:textSize="18sp"
             android:layout_centerVertical="true" />
 
-        <!-- Switch for toggling notifications -->
+        <!-- This acts as the Switch for when Notifications are toggled on or off -->
         <Switch
             android:id="@+id/notificationSwitch"
             android:layout_width="wrap_content"

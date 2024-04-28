@@ -7,52 +7,53 @@ import com.app.weathernews.request.SourcesRequest;
 import com.app.weathernews.request.TopHeadlinesRequest;
 import com.app.weathernews.response.ArticleResponse;
 import com.app.weathernews.response.SourcesResponse;
+// Implements the responses needed for the News api collection client
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 
-// This class is responsible for interacting with the News API and handling requests and responses.
+// interacts with the news api and handles the responses and requests
+// communicates with NewsApi regarding to what articles should be collected
 public class NewsApiClient {
-    private String mApiKey; // API key used for authentication
-    private Map<String, String> query; // Query parameters for API requests
+    private String mApiKey; // API Key that is required for the authentication process to be granted
+    private Map<String, String> query; // Variable for the parameters for API Requests
     private APIService mAPIService; // Service interface for making API calls
 
-    // Constructor to initialize the API key and APIService
+    // Constructor that is needed to initialise the API Service and the API Key
+    // Needed to make the API be able to function within the application
     public NewsApiClient(String apiKey) {
         mApiKey = apiKey;
         mAPIService = APIClient.getAPIService();
         query = new HashMap<>();
-        query.put("apiKey", apiKey); // Adding API key to the query parameters
+        query.put("apiKey", apiKey); // Adds the API Key to the query parameters to access the API
     }
 
-    // Callback interfaces for handling API responses
+    // Different callback interferences that are in response to different outcomes from the API
     public interface SourcesCallback {
         void onSuccess(SourcesResponse response);
         void onFailure(Throwable throwable);
     }
 
+    // Different callback interferences that are in response to different outcomes from the API
     public interface ArticlesResponseCallback {
         void onSuccess(ArticleResponse response);
         void onFailure(Throwable throwable);
     }
 
-    // Method to parse the error message from the API response
+    // This parses an error message from the API Response and throws an Error Message
     // Method to create a Throwable object with an error message extracted from a JSON string
-    private Throwable errMsg(String str) {
-        Throwable throwable = null; // Initialize throwable object
+    private Throwable errorMessages(String str) {
+        Throwable throwableObj = null; // This initialises a throwableObj object and set to null
 
         try {
             // Parse the JSON string to extract error message
@@ -60,20 +61,20 @@ public class NewsApiClient {
             // Get the error message from the JSON object
             String errorMessage = obj.getString("message");
             // Create a Throwable object with the extracted error message
-            throwable = new Throwable(errorMessage);
+            throwableObj = new Throwable(errorMessage);
         } catch (JSONException e) {
             // Catch JSONException if parsing fails
             e.printStackTrace(); // Print stack trace for debugging
         }
 
-        // Check if throwable is still null (no error message extracted or JSONException occurred)
-        if (throwable == null) {
-            // If throwable is null, create a new Throwable object with a generic error message
-            throwable = new Throwable("An error occurred");
+        // Check if throwableObj is still null (no error message extracted or JSONException occurred)
+        if (throwableObj == null) {
+            // If throwableObj is null, create a new Throwable object with a generic error message
+            throwableObj = new Throwable("An error occurred");
         }
 
         // Return the created Throwable object (either with extracted error message or generic error message)
-        return throwable;
+        return throwableObj;
     }
 
     // Method to create the query parameters for API requests
@@ -110,7 +111,7 @@ public class NewsApiClient {
                             callback.onSuccess(response.body());
                         } else {
                             try {
-                                callback.onFailure(errMsg(response.errorBody().string()));
+                                callback.onFailure(errorMessages(response.errorBody().string()));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -146,7 +147,7 @@ public class NewsApiClient {
                             callback.onSuccess(response.body());
                         } else {
                             try {
-                                callback.onFailure(errMsg(response.errorBody().string()));
+                                callback.onFailure(errorMessages(response.errorBody().string()));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -191,7 +192,7 @@ public class NewsApiClient {
                         } else {
                             try {
                                 // Invoke the onFailure callback with the error message obtained from the response body
-                                callback.onFailure(errMsg(response.errorBody().string()));
+                                callback.onFailure(errorMessages(response.errorBody().string()));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

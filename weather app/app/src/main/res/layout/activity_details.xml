@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- activity_details.xml -->
+<!-- activity_details.xml - it Defines the layout of the activity involving a toolbar, back navigation web-view and loading spinner animation -->
 
-<!-- Root layout of the activity, a RelativeLayout -->
+<!-- The layout of the activity utilising Relative layout for Flexible Positioning-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Toolbar for displaying the activity title and navigation icon -->
+    <!-- Displaying the navigation icon and title into the Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -18,12 +18,12 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         android:layout_alignParentTop="true">
 
-        <!-- Nested RelativeLayout to contain toolbar content -->
+        <!-- Contains the toolbar layout within a nested relative layout -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- Back button icon -->
+            <!-- Implementation of an icon for the Back button -->
             <ImageView
                 android:id="@+id/backbutton"
                 android:layout_width="30dp"
@@ -34,7 +34,7 @@
                 android:src="@drawable/baseline_arrow_back_24"
                 android:layout_height="30dp"/>
 
-            <!-- Title TextView -->
+            <!-- Text View for the Title -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold"/>
 
-            <!-- Bookmark button icon -->
+            <!-- Implementation of an icon for the bookmark button -->
             <ImageView
                 android:id="@+id/bookmarkButton"
                 android:layout_width="30dp"
@@ -57,14 +57,14 @@
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- WebView for displaying web content -->
+    <!-- Displays web content utilising the Web View-->
     <WebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/webview"
         android:visibility="invisible" />
 
-    <!-- Loading spinner (SpinKitView) -->
+    <!-- Implementation of the loading spinner using SpinKit-->
     <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/spin_kit"
         style="@style/SpinKitView.DoubleBounce"
@@ -73,8 +73,4 @@
         android:layout_centerInParent="true"
         app:SpinKit_Color="@color/colorPrimaryDark"
         tools:ignore="MissingClass" />
-
-    <!-- Placeholder views for displaying image and text -->
-    <!-- Uncomment to add image and text views -->
-
 </RelativeLayout>

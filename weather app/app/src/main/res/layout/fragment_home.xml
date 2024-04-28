@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".fragment.HomeFragment">
 
-    <!-- Toolbar for displaying the app title and notification button -->
+    <!-- The top tool bar that displays the app name and the notification screen, acts as an action bar-->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
-        <!-- Relative layout to hold the title text and notification button -->
+        <!-- Holds the text of the title as well as the notification button -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -50,7 +50,7 @@
         android:alpha="0.7"
         android:background="@drawable/background"/>
 
-    <!-- Loading spinner -->
+    <!-- Loading spinner that plays while an image or article is loading on the Screen -->
     <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/spin_kit"
         style="@style/SpinKitView.DoubleBounce"
@@ -72,13 +72,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- LinearLayout to hold the content of the fragment -->
+            <!-- Holds the main content of the Fragment involved-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <!-- CardView for displaying the top news item -->
+                <!-- CardView for displaying the top news article at the top of the screen-->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/top_news"
                     android:visibility="visible"
@@ -88,12 +88,12 @@
                     android:elevation="3dp"
                     app:cardCornerRadius="10dp">
 
-                    <!-- Relative layout to organize the views inside the CardView -->
+                    <!-- A layout used to organise the different views in a card fashion -->
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <!-- Loading spinner for the top news image -->
+                        <!-- The loading spinner for the top article while it is loading -->
                         <com.github.ybq.android.spinkit.SpinKitView
                             android:id="@+id/spin_kit_main_image"
                             style="@style/SpinKitView.DoubleBounce"
@@ -103,7 +103,7 @@
                             app:SpinKit_Color="@color/colorPrimaryDark"
                             tools:ignore="MissingClass" />
 
-                        <!-- ImageView for displaying the top news image -->
+                        <!-- ImageView for displaying the image of the top news article -->
                         <ImageView
                             android:id="@+id/imageView_top"
                             android:layout_width="match_parent"
@@ -112,7 +112,7 @@
                             android:visibility="gone"
                             android:src="@drawable/cloudy" />
 
-                        <!-- LinearLayout to hold the text content of the top news item -->
+                        <!-- LinearLayout to hold the text content of the top news item including the titles-->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -122,7 +122,7 @@
                             android:layout_marginEnd="5dp"
                             android:orientation="vertical">
 
-                            <!-- TextViews for title, description, author, and time of the top news item -->
+                            <!-- TextViews for title, description, author, and time of the top news item, different size to other articles -->
                             <TextView
                                 android:id="@+id/titleTextView_top_news"
                                 android:layout_width="match_parent"
@@ -174,7 +174,7 @@
                             </LinearLayout>
                         </LinearLayout>
 
-                        <!-- ImageButton for bookmarking the top news item -->
+                        <!-- ImageButton for bookmarking the top news item as the size is different -->
                         <ImageButton
                             android:id="@+id/bookmarkButton_top_news"
                             android:layout_width="40dp"
@@ -188,7 +188,7 @@
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- RecyclerView for displaying the list of topics -->
+                <!-- RecyclerView for displaying the entire list of articles-->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/topicRv"
                     android:visibility="visible"
