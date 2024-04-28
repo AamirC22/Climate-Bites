@@ -4,14 +4,16 @@ import com.app.weathernews.models.Article;
 import java.util.ArrayList;
 
 /**
- * This class represents the response received from the API when fetching articles.
+ * This checks the responses received from the API when fetching articles and initialises key variables and arrays
  */
 public class ArticleResponse {
-    private String status; // Status of the response (e.g., "ok" or "error")
-    private int totalResults; // Total number of articles available
-    private ArrayList<Article> articles; // List of articles retrieved from the API
+    private String status; // Checks the status of the response and where it is ok or an error
+    private int totalResults; // This is the total number of articles that are available to the application from the API
+    private ArrayList<Article> articles; // This is the list of articles from the API put into an ArrayList
 
-    // Getter and setter methods for all fields
+    /**
+     * These are the getter and setter methods involved for the Sources, Articles and the Status and the Total Results
+     */
 
     public String getStatus() {
         return status;
@@ -37,7 +39,7 @@ public class ArticleResponse {
         this.articles = articles;
     }
 
-    @Override
+    @Override // Sets the articles into strings to be used in the implementation of the articles
     public String toString() {
         return "ArticleResponse{" +
                 "status='" + status + '\'' +
