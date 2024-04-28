@@ -99,14 +99,14 @@ public class DetailsActivity extends AppCompatActivity {
         });
 
         // This initialises the Views for the loading indicator for the application
-        // It then loads the Sprites 
+        // It then loads the Sprites
         spinKitView = findViewById(R.id.spin_kit);
         webView = findViewById(R.id.webview);
         Sprite doubleBounce = new DoubleBounce();
         spinKitView.setIndeterminateDrawable(doubleBounce);
         webView.getSettings().setJavaScriptEnabled(true);
 
-        // WebView client for handling page loading events
+        // This handles events that involve page loading by utilising WebView Client
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -128,16 +128,16 @@ public class DetailsActivity extends AppCompatActivity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                // Check if URL is network URL
+                // This checks if the network url is the same as the string url
                 if (URLUtil.isNetworkUrl(url)) {
                     return false;
                 }
-                // Check if the app is installed
+                // This ensures that the app is installed and if not, no activities occur
                 if (appInstalledOrNot(url)) {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(intent);
                 } else {
-                    // Do something if app is not installed
+
                 }
                 return true;
             }
@@ -147,14 +147,14 @@ public class DetailsActivity extends AppCompatActivity {
         webView.loadUrl(webUrl);
     }
 
-    // Method to check if the app is installed or not based on the URL
+    // This checks if the app is installed and if not, false is returned
     private boolean appInstalledOrNot(String uri) {
         PackageManager pm = getPackageManager();
         try {
             pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
-            // App not found
+            // This means that the app is not installed
         }
         return false;
     }
