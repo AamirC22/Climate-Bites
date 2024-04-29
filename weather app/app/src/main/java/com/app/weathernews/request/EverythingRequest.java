@@ -5,26 +5,23 @@ package com.app.weathernews.request;
  * This includes news articles, blogs, and other content.
  */
 public class EverythingRequest {
-    // Query parameter: search query
-    private String q;
-    // Query parameter: sources
-    private String sources;
-    // Query parameter: domains
-    private String domains;
-    // Query parameter: start date
-    private String from;
-    // Query parameter: end date
-    private String to;
-    // Query parameter: language
-    private String language;
-    // Query parameter: sort by
-    private String sortBy;
-    // Query parameter: page size
-    private String pageSize;
-    // Query parameter: page number
-    private String page;
 
-    // Private constructor that takes a Builder object
+    private String q; // variable for query
+
+    private String sources; // variable for sources
+
+    private String domains; // varaible for domain names
+
+    private String from; // variable for start date for the article search retrieval
+    private String to; // variable for end date for the article search retrieval
+    private String language; // variable for article language
+    private String sortBy; // variable for sorting by date
+    private String pageSize; // variable for the size of the pages
+    private String page; // variable for the page
+
+    /**
+     * Private constructor to enforce the use of the Builder pattern for creating instances.
+     */
     private EverythingRequest(Builder builder) {
         this.q = builder.q;
         this.sources = builder.sources;
@@ -37,7 +34,7 @@ public class EverythingRequest {
         this.page = builder.page;
     }
 
-    // Getter methods for all query parameters
+    // Various methods of Public Getters needed to get the query parameters of the articles
     public String getQ() {
         return q;
     }
@@ -74,11 +71,14 @@ public class EverythingRequest {
         return page;
     }
 
-    // Builder class to construct an EverythingRequest object
+    /**
+     * Constructs an EverythingRequest instance using the Builder class,
+     * Follows builder pattern and offers various parameters.
+     */
     public static class Builder {
         private String q, sources, domains, from, to, language, sortBy, pageSize, page;
 
-        // Methods to set query parameters
+        // Various methods needed to set the query parameters in the builders.
         public Builder q(String q) {
             this.q = q;
             return this;
@@ -124,7 +124,7 @@ public class EverythingRequest {
             return this;
         }
 
-        // Method to construct an EverythingRequest object
+        // This is a method that is used to construct the EverythingRequest Object
         public EverythingRequest build() {
             return new EverythingRequest(this);
         }

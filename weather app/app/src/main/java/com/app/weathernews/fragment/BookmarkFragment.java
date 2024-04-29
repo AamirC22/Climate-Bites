@@ -78,22 +78,17 @@ public class BookmarkFragment extends Fragment implements Listener {
     }
 
     /**
-     * Callback method triggered by interactions in the bottom navigation.
-     * Currently used to refresh the list of bookmarked articles.
+     * Updates the adapter in the scenario that the bottom navigation bar is interacted with
      */
     @Override
     public void onBottomNavClick() {
         updateAdapter();
     }
-
-    /**
-     * Callback method to refresh the list or clear it based on the provided parameter.
-     * @param clearList If true, clear the list; otherwise, refresh the list.
-     */
+    //Loads the data and clears the list if required
     @Override
     public void LoadData(boolean clearList) {
         if (clearList) {
-            bookmarkedItems.clear(); // Clear the list if requested.
+            bookmarkedItems.clear();
         }
         updateAdapter();
     }
@@ -101,7 +96,7 @@ public class BookmarkFragment extends Fragment implements Listener {
     @Override
     public void onResume() {
         super.onResume();
-        // Re-fetch bookmarked items when fragment resumes and update the adapter.
+        // Updates the adapter and fetches the bookmarked articles again when the fragment is opened
         bookmarkedItems = Paper.book().read("bookmarked_items", new ArrayList<>());
         setAdapter();
     }
@@ -110,12 +105,12 @@ public class BookmarkFragment extends Fragment implements Listener {
      * Sets the RecyclerView adapter to display the list of bookmarked articles.
      */
     private void setAdapter() {
-        // Reverse the bookmark list each time to ensure the newest items appear at the top.
+        // Newest bookmarks are put on top as it is reversed
         Collections.reverse(bookmarkedItems);
         adapter = new BookMarkAdapter(getContext(), bookmarkedItems, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        // Notify the adapter of data changes so the UI can be updated.
+        // Updates UI and notifies the adapter of any changes to the data set
         adapter.notifyDataSetChanged();
     }
 }
