@@ -24,34 +24,39 @@ import java.util.Collections;
 
 import io.paperdb.Paper;
 
+/**
+ * This fragment is used to display the bookmarked news articles
+ * It is the 2nd page of the 3 involved in the application
+ * Implements a listener that handles the activities and if bookmarks are added
+ * UI is then updated.
+ */
 public class BookmarkFragment extends Fragment implements Listener {
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView; // Initialises a private Recycler View
     private BookMarkAdapter adapter;
 
-    // ArrayList to store bookmarked items
+    // a Private array list that stores the bookmarked articles
     private ArrayList<Article> bookmarkedItems;
 
     public BookmarkFragment() {
+       // Empty default constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Initialize Paper for local storage
+        // Initialize PaperDB for local storage operations for the bookmarked articles.
         Paper.init(getContext());
-        // Fetch bookmarked items from local database and store them in 'bookmarkedItems'
+        // This loads all the previously bookmarked articles from the paper database
         bookmarkedItems = Paper.book().read("bookmarked_items", new ArrayList<>());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bookmark, container, false);
-        // Find the RecyclerView in the layout
+        // This sets up the adapter and then initialises the RecyclerView
         recyclerView = view.findViewById(R.id.topicRv);
-        // Set the adapter for the RecyclerView
         setAdapter();
         return view;
     }
@@ -59,50 +64,58 @@ public class BookmarkFragment extends Fragment implements Listener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Any additional logic can be added here if needed
     }
 
-    // Method to update the adapter's dataset and refresh the RecyclerView
+    /**
+     * Updates the adapter's dataset and refreshes the RecyclerView.
+     */
     public void updateAdapter() {
-        // Fetch bookmarked items from local database
+        // This updates the adapter by fetching the latest bookmarked articles
         bookmarkedItems = Paper.book().read("bookmarked_items", new ArrayList<>());
-        // Reverse the list to show the latest bookmarks first
+        // Newest bookmarks are put on top as it is reversed
         Collections.reverse(bookmarkedItems);
-        // Set the adapter again to refresh the RecyclerView
         setAdapter();
     }
 
-    // Callback method for bottom navigation click
+    /**
+     * Callback method triggered by interactions in the bottom navigation.
+     * Currently used to refresh the list of bookmarked articles.
+     */
     @Override
     public void onBottomNavClick() {
-        // Call updateAdapter() method to refresh the RecyclerView
         updateAdapter();
     }
 
-    // Callback method to load data
+    /**
+     * Callback method to refresh the list or clear it based on the provided parameter.
+     * @param clearList If true, clear the list; otherwise, refresh the list.
+     */
     @Override
     public void LoadData(boolean clearList) {
-        // Call updateAdapter() method to refresh the RecyclerView
+        if (clearList) {
+            bookmarkedItems.clear(); // Clear the list if requested.
+        }
         updateAdapter();
     }
 
-    // Method called when the fragment resumes
     @Override
     public void onResume() {
         super.onResume();
-        // Fetch bookmarked items from local database and refresh the adapter
+        // Re-fetch bookmarked items when fragment resumes and update the adapter.
         bookmarkedItems = Paper.book().read("bookmarked_items", new ArrayList<>());
         setAdapter();
     }
 
-    // Method to set the adapter in the RecyclerView to display the bookmarked items
+    /**
+     * Sets the RecyclerView adapter to display the list of bookmarked articles.
+     */
     private void setAdapter() {
-        // Reverse the list to show the latest bookmarks first
+        // Reverse the bookmark list each time to ensure the newest items appear at the top.
         Collections.reverse(bookmarkedItems);
-        // Initialize the adapter with the bookmarked items and set it to the RecyclerView
         adapter = new BookMarkAdapter(getContext(), bookmarkedItems, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        // Notify the adapter of data changes so the UI can be updated.
         adapter.notifyDataSetChanged();
     }
 }
