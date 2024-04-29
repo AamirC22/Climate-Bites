@@ -1,44 +1,53 @@
 package com.app.weathernews.request;
 
 /**
- * A class representing a request to fetch news sources from the API.
+ * This acts as a sources request from the NewsAPI and uses a builder pattern for object creation,
+ * emphasises the need for necessary query parameters and filters the news sources by category language and country
  */
 public class SourcesRequest {
-    // Query parameter: category
-    private String category;
-    // Query parameter: language
-    private String language;
-    // Query parameter: country
-    private String country;
+    // These are the query parameters for the API Request
+    private String category; // Category of the news sources
+    private String language; // Language of the news sources
+    private String country;  // Country of the news sources
 
-    // Private constructor that takes a Builder object
+    /**
+     * This is a builder constructor that initialises a SourcesRequest object and uses a private constructor
+     * to enforce builder dependency for object creation
+     * @param builder This contains the instance needed to set up the parameters using the Builder object
+     */
     public SourcesRequest(Builder builder) {
         this.category = builder.category;
         this.language = builder.language;
         this.country = builder.country;
     }
 
-    // Getter methods for all query parameters
+   // Getter methods for the Category of the News Source
     public String getCategory() {
         return category;
     }
 
+    // Getter methods for the Language of the News Source
     public String getLanguage() {
         return language;
     }
 
+    // Getter methods for the Country of the news source
     public String getCountry() {
         return country;
     }
 
-    // Builder class to construct a SourcesRequest object
+    /**
+     * A static class Builder for SourcesRequest, configures methods needed to instantiate it
+     * Sets optional and required parameters in a flexible manner
+     */
     public static class Builder {
-        private String category, language, country;
+        private String category; // Variable for Category value
+        private String language; // Variable for Language Value
+        private String country;  //  Variable for country value
 
-        // Default constructor
+        // This provides Flexibility to the Builder and acts as a Constructor
         public Builder() {}
 
-        // Methods to set query parameters
         public Builder category(String category) {
             this.category = category;
             return this;
@@ -54,7 +63,10 @@ public class SourcesRequest {
             return this;
         }
 
-        // Method to construct a SourcesRequest object
+        /**
+         * It builds and returns the sources request with the parameters that have been configured
+         * @return A new instance of SourcesRequest with the configured parameters.
+         */
         public SourcesRequest build() {
             return new SourcesRequest(this);
         }

@@ -5,25 +5,32 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 /**
- * Utility class for network-related operations.
+ * This is a utility class that checks the network connectivitiy status within the device that is running
+ * the application. Methods are used to determine if the device is offline or not,
+ * Very important as internet is needed to retrieve articles via API calls
  */
 public class NetworkUtils {
-
     /**
-     * Function to check if the device is connected to the internet.
-     * @param context The context of the application/activity.
-     * @return True if the device is connected to the internet, false otherwise.
+     * This method checks if the device has internet connectivity or not.
+     * Without network connectivity, the application would not be able to function or attempt
+     * network operations without the connectivity.
+     * @param context Says the context of the application or activity, important for accessing
+     *                System services, passed from an Activity or Application subclass.
+     * @return boolean that returns True if device connected, false if otherwise
+     *
+     * ConnectivityManager is utilises to check the current state of the network.
+     * It is a system service that manages network connections and informs the application.
      */
     public static boolean isNetworkAvailable(Context context) {
-        // Get the connectivity manager system service
+        // Get the ConnectivityManager Service to be used by the system
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
-            // Get the active network information
+            // Gets the network information of the Device
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            // Check if the active network info is not null and is connected
+            // Returns depending on if the network info is null or not
             return activeNetworkInfo != null && activeNetworkInfo.isConnected();
         }
-        // Return false if connectivity manager is null or no active network info is available
+        // Return false if there is no network or if the connectivity manager returns Null
         return false;
     }
 }
