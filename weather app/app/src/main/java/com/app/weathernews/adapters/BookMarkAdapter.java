@@ -34,6 +34,10 @@ import java.util.Locale;
 
 import io.paperdb.Paper;
 
+/**
+ * This is an adapter class for Bookmarks that display the bookmarked news articles
+ * in a recycler view, it interacts with Paper database to manage bookmarks.
+ */
 public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHolder> {
 
     // Context reference
@@ -48,7 +52,14 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHo
     // Reference to the bookmark fragment
     private BookmarkFragment fragment;
 
-    // Constructor
+    /**
+     * Constructs the adapter using the provided context, list of articles, and a reference to the bookmark fragment.
+     * Constructor for the adapter using list of articles, context, data and references to the fragment
+     *
+     * @param context
+     * @param data List of articles that will be included to RecyclerView.
+     * @param fragment Reference to the BookmarkFragment for UI updates and additions.
+     */
     public BookMarkAdapter(Context context, List<Article> data, BookmarkFragment fragment) {
         this.context = context;
         this.fragment = fragment;
@@ -63,7 +74,7 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate the item layout
+        // Inflate the layout of the RecyclerView and then returns the new view holder
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_items, parent, false);
         return new ViewHolder(view);
     }
@@ -72,17 +83,16 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Load article data into the ViewHolder
         Article article = data.get(position);
-
-// Check if the article has a valid image URL
+        // Check if the article has a valid image URL and if not, handles error
         if(article.getUrlToImage() != null && !article.getUrlToImage().isEmpty()) {
-            // If yes, show progress bar and load image asynchronously
+            // If the URL is not null , it loads image and the details of the article
             holder.progressBar.setVisibility(View.VISIBLE);
             Glide.with(context)
                     .load(article.getUrlToImage())
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, @Nullable Object model, @NonNull Target<Drawable> target, boolean isFirstResource) {
-                            // If image loading fails, set placeholder and hide progress bar
+                            // If image loading fails, set the placeholder image in place, hide the progress bar , then returns false
                             holder.imageView.setImageDrawable(context.getDrawable(R.drawable.cloudy));
                             holder.imageView.setVisibility(View.VISIBLE);
                             holder.progressBar.setVisibility(View.GONE);
@@ -91,7 +101,6 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHo
 
                         @Override
                         public boolean onResourceReady(@NonNull Drawable resource, @NonNull Object model, @NonNull Target<Drawable> target, @NonNull DataSource dataSource, boolean isFirstResource) {
-                            // If image loads successfully, hide progress bar and show image
                             holder.progressBar.setVisibility(View.GONE);
                             holder.imageView.setVisibility(View.VISIBLE);
                             return false;
@@ -126,7 +135,7 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHo
                 // Mark the article as not bookmarked
                 article.setBookmarked(false);
                 // Update the adapter in the bookmark fragment
-                fragment.updateAdapter();
+                fragment.updateAdapter(); // Notify the fragment that there is a change in the data set.
             }
         });
 
@@ -134,7 +143,7 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        // Return the total number of items in the data list
+        // This returns the number of articles that are in the data set
         return data.size();
     }
 
@@ -146,7 +155,7 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHo
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Initialize views
+            // This initialises all the UI Elements using a superclass of ItemView
             imageView = itemView.findViewById(R.id.imageView);
             titleTextView = itemView.findViewById(R.id.titleTextView);
             authorTextView = itemView.findViewById(R.id.authorTextView);
@@ -154,7 +163,7 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHo
             bookmarkButton = itemView.findViewById(R.id.bookmarkButton);
             progressBar = itemView.findViewById(R.id.image_progress);
 
-            // Set click listener for item view
+            // This sets an on click listener for item view
             itemView.setOnClickListener(this);
         }
 
@@ -173,37 +182,35 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkAdapter.ViewHo
         }
     }
 
-    // Format date string
-    // Format the date string from API format to a more readable format
     public static String formatDate(String dateString) {
-        // Define input and output date formats
+        /**
+         * Utility method to format the date string received from the API into a format that is more readable for the user
+         * @param dateString
+         * @return
+         */
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
-        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMMM yyyy 'at' HH:mm", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy 'at' HH:mm", Locale.getDefault());
 
         try {
-            // Parse the input date string to obtain a Date object
             Date date = inputFormat.parse(dateString);
-            // Format the Date object using the output format
             return outputFormat.format(date);
         } catch (ParseException e) {
-            // Handle parsing exception (if any)
             e.printStackTrace();
-            return ""; // Return empty string if parsing fails
+            return "";
         }
     }
 
-    // Limit the length of the article title
+    // This limits the length of article titles and then removes all the white spaces
     private String getTitleLength(String title) {
         // Split the full title into individual words
-        String fullText = title;
-        String[] words = fullText.split(" ");
-        // Create a StringBuilder to construct the shortened title
+        String[] words = title.split(" ");
+        // Create a StringBuilder to store the shortened title
         StringBuilder shortenedText = new StringBuilder();
-        // Iterate over the words, appending them to the shortened text until the limit is reached
+        //  This shortens the title through a loop and appends until the max length if necessary
         for (int i = 0; i < Math.min(4, words.length); i++) {
             shortenedText.append(words[i]).append(" ");
         }
-        // Trim any trailing whitespace and return the shortened title
+        // This returns a shortened title if it has been trimmed
         return shortenedText.toString().trim();
     }
 }
