@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -20,26 +19,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.app.weathernews.NewsApiClient;
 import com.app.weathernews.R;
 import com.app.weathernews.activity.DetailsActivity;
 import com.app.weathernews.activity.Listener;
-import com.app.weathernews.activity.MainActivity;
 import com.app.weathernews.activity.Settings;
 import com.app.weathernews.adapters.NewsAdapter;
 import com.app.weathernews.models.Article;
-import com.app.weathernews.models.Source;
-import com.app.weathernews.network.NetworkUtils;
 import com.app.weathernews.request.EverythingRequest;
-import com.app.weathernews.request.SourcesRequest;
 import com.app.weathernews.response.ArticleResponse;
-import com.app.weathernews.response.SourcesResponse;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -48,57 +39,39 @@ import com.bumptech.glide.request.target.Target;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.DoubleBounce;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
-import io.paperdb.Paper;
+/**
+ * Fragment that is needed to display the home view of the news application,
+ * shows the news in a tabloid format and has top headline as a dedicated card
+ * shows a list of articles below it.
+ */
 
 public class HomeFragment extends Fragment implements Listener {
 
     // Declaration of class variables
 
     // List to store article items
-    private List<Article> arrayList;
-
-    // SpinKitViews for loading animations
-    SpinKitView spinKitView;
-    SpinKitView spinKitTopNews;
-
-    // Boolean to track if data is loaded for the first time
-    boolean isFirstLoad = true;
-
-    // Boolean to track if data is loaded
-    boolean isDataLoaded = false;
-
-    // RequestQueue for making API requests
+    private List<Article> arrayList; // Holds an Array List for the articles displayed in RecyclerView
+    SpinKitView spinKitView; // Loading animations using SpinKitViews
+    SpinKitView spinKitTopNews; // Loading animation for the Top Headline card
+    boolean isFirstLoad = true; // Checks if data is loaded for the first time or not
+    boolean isDataLoaded = false; // Checks if the data is loaded already or not
     private RequestQueue requestQueue;
-
-    // RecyclerView to display articles
-    RecyclerView recyclerView;
-
-    // UI elements for top news
-    CardView cardView;
-    ImageView notificationBtn;
-    private ImageView topNewsImage, bookmarkButtonTopNews;
-    private TextView titleTopNews, descriptionTopNews, authorTopNews, timeTopNews;
-
-    // Model to store top news article
-    Article topNews;
+    RecyclerView recyclerView; // Displays articles
+    CardView cardView; // The card for the top news headline
+    ImageView notificationBtn; // Adds Notification button to the interface
+    private ImageView topNewsImage, bookmarkButtonTopNews; // Sets images for UI
+    private TextView titleTopNews, descriptionTopNews, authorTopNews, timeTopNews; // Sets Texts for UI
+    Article topNews; // Stores top news article in a Article model
 
     // Adapter to set items in RecyclerView
     NewsAdapter adapter;
@@ -106,21 +79,21 @@ public class HomeFragment extends Fragment implements Listener {
     // SwipeRefreshLayout for refreshing data
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    // Boolean to track if new data is loaded
-    boolean isnew = false;
+    // Boolean to track if new data is loaded or not, initially false
+    boolean checkIfNew = false;
 
     // Constructor for HomeFragment
     public HomeFragment() {
-        // Required empty public constructor
     }
 
-    // Static method to create a new instance of HomeFragment
+    //  Creates a new instance of Home Fragment as a static object
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         return fragment;
     }
 
-    // Lifecycle method called when fragment is created
+    // Used when a fragment is created and initialises different components of the fragment
+    // Context is not needed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,11 +103,11 @@ public class HomeFragment extends Fragment implements Listener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // This inflates the layout of the fragment for the UI
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         Log.d("TAGsgsg", "onCreateView: ");
-        // Initialize RequestQueue for making API requests
+        // Initialize RequestQueue for making API requests and for network requests
         requestQueue = Volley.newRequestQueue(getActivity());
 
         // Initialize RecyclerView and SpinKitViews
@@ -142,10 +115,10 @@ public class HomeFragment extends Fragment implements Listener {
         spinKitView = view.findViewById(R.id.spin_kit);
         spinKitTopNews = view.findViewById(R.id.spin_kit_main_image);
 
-        // Initialize top news article
+        // Initialize the top news headline's UI elements.
         topNews = new Article();
 
-        // Find UI elements by their IDs
+        // Find UI elements by their IDs for the top news headline
         topNewsImage = view.findViewById(R.id.imageView_top);
         bookmarkButtonTopNews = view.findViewById(R.id.bookmarkButton_top_news);
         titleTopNews = view.findViewById(R.id.titleTextView_top_news);
@@ -157,19 +130,17 @@ public class HomeFragment extends Fragment implements Listener {
 
 
 
-        // Initialize SpinKit animation for loading
+        // Initialize SpinKit animation for loading while headline loads
         Sprite doubleBounce = new DoubleBounce();
         spinKitView.setIndeterminateDrawable(doubleBounce);
 
-        // Initialize empty ArrayList for storing articles
+        // Creates empty arraylist for storing articles
         arrayList = new ArrayList<Article>();
 
-        // Show loading animation if it's the first load
+        // If its the first time the headline is loading, it sets the loading animation
         if (isFirstLoad) {
             spinKitView.setVisibility(View.VISIBLE);
         }
-
-        // Click listener for notification button to navigate to Settings screen
         notificationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,19 +151,18 @@ public class HomeFragment extends Fragment implements Listener {
         return view;
     }
 
+
+    // Called after onCreateView, no saved state restored yet.
+    // Binds components to the data and full initialises the View Hierarchy.
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Show loading indicator if data is already loaded
+        // If data is already loaded, then hide the loading animation as its already loaded
         if (isDataLoaded) {
-            spinKitView.setVisibility(View.VISIBLE);
+            spinKitView.setVisibility(View.GONE);
         }
-
-        // Fetch data from API and load into RecyclerView
        getData();
-        //getDataResources();
-
-        // Set up SwipeRefreshLayout for refreshing data
+        // Initialises the swipe movements for refreshing data on swipe gestures.
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_home);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -203,8 +173,7 @@ public class HomeFragment extends Fragment implements Listener {
                     arrayList.clear();
                     arrayList = new ArrayList<>();
                 }
-                isnew = true;
-               // getData();// Refresh data from API
+                checkIfNew = true;
                 // Delay for one second before stopping refresh animation
                 Handler handler = new Handler();
                 final Runnable r = new Runnable() {
@@ -219,7 +188,7 @@ public class HomeFragment extends Fragment implements Listener {
 
 
 
-        // Click listener for topNews image, opens DetailsActivity
+        // OnClickListener needed for top headline card, navigates to details view of the article
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -233,57 +202,49 @@ public class HomeFragment extends Fragment implements Listener {
     }
 
 
-    // Method to fetch data from API
+    // Fetches data from NewsAPI
     private void getData() {
 
 
         // Instantiate a NewsApiClient object with the API key
         NewsApiClient newsApiClient = new NewsApiClient("ac525019c81a43fabb8e3c2cbda45225");
 
-        // Make an API request to fetch everything related to "Climate Change"
+        // This makes a request to get every article involving the query keyword of "Climate Change"
         newsApiClient.getEverything(
                 new EverythingRequest.Builder()
                         .q("Climate Change") // Set the query parameter
-                        .build(), // Build the request
-                new NewsApiClient.ArticlesResponseCallback() { // Define a callback for handling response
+                        .build(),
+                new NewsApiClient.ArticlesResponseCallback() { // Define a callback for handling response in case of an error while retrieving
                     @Override
                     public void onSuccess(ArticleResponse response) {
-                        // If the API request is successful, handle the response
                         if (!isAdded()) {
                             return;
                         }
-                        // Log the response for debugging purposes
                         Log.d("TrendingResponse", response.toString());
                         arrayList.clear();
-
-                        // Set the data loading flag to true
-                        isDataLoaded = true;
-
-                        // If it's the first load, hide the loading animation
+                        isDataLoaded = true; // Sets true as data has loaded
                         if (isFirstLoad) {
                             spinKitView.setVisibility(View.GONE);
                         }
 
-                        // Store the articles retrieved from the response in the array list
+                        // Stores the articles retrieved from the previous method into the array list previously initialised
                         arrayList = response.getArticles();
 
                         Log.d("arraylist", "onSuccess: "+arrayList.toString());
-                        // Set the adapter for the recycler view to display the articles
+                        // Displays article by setting the recycler view and updating it.
                         setAdapter();
-
-                        // Load data for the top news
                         cardView.setVisibility(View.VISIBLE);
                         topNewsImage.setVisibility(View.VISIBLE);
-                        // Check if the URL to the top news image is available
+                        // Checks if the image has an url and if it is empty or not
                         if (topNews.getUrlToImage() != null && !topNews.getUrlToImage().isEmpty()) {
 
-                            // If the image URL is available, load the image using Glide
+                            // Use glide to load the image using the URL if it is present
                             Glide.with(requireActivity())
                                     .load(topNews.getUrlToImage())
                                     .listener(new RequestListener<Drawable>() {
                                         @Override
                                         public boolean onLoadFailed(@Nullable GlideException e, @Nullable Object model, @NonNull Target<Drawable> target, boolean isFirstResource) {
-                                            // If image loading fails, set a default image and hide the loading indicator
+                                            // Sets a default image if the image has no URL or if it is null
                                             spinKitTopNews.setVisibility(View.GONE);
                                             topNewsImage.setImageDrawable(getContext().getDrawable(R.drawable.cloudy));
                                             return false;
@@ -291,7 +252,6 @@ public class HomeFragment extends Fragment implements Listener {
 
                                         @Override
                                         public boolean onResourceReady(@NonNull Drawable resource, @NonNull Object model, Target<Drawable> target, @NonNull DataSource dataSource, boolean isFirstResource) {
-                                            // If image loading is successful, hide the loading indicator
                                             spinKitTopNews.setVisibility(View.GONE);
                                             return false;
                                         }
@@ -300,54 +260,48 @@ public class HomeFragment extends Fragment implements Listener {
                                     .placeholder(R.drawable.cloudy)
                                     .into(topNewsImage);
 
-                            // Make the top news card view and image view visible
-
                         } else {
-                            // If the image URL is not available, hide the loading indicator and set a default image
                             spinKitTopNews.setVisibility(View.GONE);
                             topNewsImage.setImageDrawable(getContext().getDrawable(R.drawable.cloudy));
                         }
 
-                        // Set the bookmark button image based on whether the article is bookmarked or not
+                        // Changes the appearance of the bookmark icon depending on if the article is bookmarked or not
                         bookmarkButtonTopNews.setImageResource(topNews.isBookmarked() ? R.drawable.ic_baseline_bookmark_24 : R.drawable.baseline_bookmark_black);
 
-                        // Set the title, description, author, and time of the top news article
-                        titleTopNews.setText(topNews.getTitle());
-                        descriptionTopNews.setText(topNews.getDescription());
+                        // This sets the different details of the Top Headline article
+                        titleTopNews.setText(topNews.getTitle()); // sets title
+                        descriptionTopNews.setText(topNews.getDescription()); // sets description
                         authorTopNews.setText(topNews.getSource().getName());
                         timeTopNews.setText(formatDate(topNews.getPublishedAt()));
 
-                        // Remove the top news article from the list of articles
+                        // Remove the top news article from the list of articles to be put below
                         response.getArticles().remove(0);
                     }
 
                     @Override
                     public void onFailure(Throwable throwable) {
                         Log.d("TAGdfgsdf", "onFailure: "+throwable);
-                        // If the API request fails, set the data loading flag to false
+                        // Changes the if data loaded to false if there is a failure in retrieval or data is not loaded
                         isDataLoaded = false;
-
-                        // Hide the loading animation
                         spinKitView.setVisibility(View.GONE);
 
-                        // Print the error message
+                        // Print the error message in order to be visible for debugging
                         System.out.println(throwable.getMessage());
                     }
                 }
         );
     }
+
     //The date come in api as standard format below method is used to convert the date as dd MMMM yyyy 'at' HH:mm
 
-    // Method to format a date string from API response into a human-readable format
+    // Method to format a date string from API response into an easier readable format
     public static String formatDate(String dateString) {
         // Define input and output date formats
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
         SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy 'at' HH:mm", Locale.getDefault());
 
         try {
-            // Parse the input date string into a Date object using the input format
             Date date = inputFormat.parse(dateString);
-            // Format the Date object into a string using the output format
             return outputFormat.format(date);
         } catch (ParseException e) {
             // If parsing fails, print the stack trace and return an empty string
@@ -356,11 +310,11 @@ public class HomeFragment extends Fragment implements Listener {
         }
     }
 
-    // Method called when the bottom navigation is clicked to refresh the data
+    // Refreshes the data and is called when the bottom navigation is clicked
+    // Clears existing data and fetches new data from API
     @Override
     public void onBottomNavClick() {
         Log.d("functionTest", "called");
-        // Show the refresh indicator
         swipeRefreshLayout.setRefreshing(true);
         // Clear the existing data if any
         if (!arrayList.isEmpty()) {
@@ -369,11 +323,9 @@ public class HomeFragment extends Fragment implements Listener {
             Log.d("functionTest", arrayList.size() + " size");
         }
         // Set the flag to indicate new data loading
-        isnew = true;
+        checkIfNew = true;
         // Fetch data from the API
         getData();
-
-        // Define a delayed task to stop the refresh indicator after a certain time
         Handler handler = new Handler();
         final Runnable r = new Runnable() {
             public void run() {
@@ -385,21 +337,18 @@ public class HomeFragment extends Fragment implements Listener {
         handler.postDelayed(r, 1000);
     }
 
-    // Empty method stub required by the interface Listener
+    //This is an empty method needed by the Listener Interface
     @Override
     public void LoadData(boolean clearList) {
-        // This method does nothing in this implementation
+
     }
 
-    // Method called when the fragment resumes to update the RecyclerView with new data
+    // The method that is called when the fragment updates the recyclerview with new data
+    // that has been retrieved from NewsAPI
     @Override
     public void onResume() {
-        // Log a message indicating that the onResume method is called
-        Log.d("thisssss", "onResumeView:Run ");
-        // Call the superclass onResume method
         super.onResume();
         getData();
-        // Update the RecyclerView adapter to reflect any changes in data
         setAdapter();
     }
 
@@ -417,9 +366,8 @@ public class HomeFragment extends Fragment implements Listener {
         if (!arrayList.isEmpty()) {
             topNews = arrayList.get(0);
             // Now topNews contains the most recent article
-        } else {
-            // Handle the case where the arrayList is empty
-        }
+        }  // Handle the case where the arrayList is empty
+
 
         if (isAdded()) {
             // Fragment is attached to an activity, so it's safe to access context
@@ -427,9 +375,12 @@ public class HomeFragment extends Fragment implements Listener {
             // Set the adapter on the RecyclerView
             recyclerView.setAdapter(adapter);
         }
-        // Create a new instance of the NewsAdapter with the sorted list of articles
 
-        // Disable nested scrolling for better performance
+        /*
+         Create a new instance of the NewsAdapter with the sorted list of articles
+         Disable nested scrolling for better performance
+        */
+
         recyclerView.setNestedScrollingEnabled(false);
         // Notify the adapter that the data set has changed
         adapter.notifyDataSetChanged();
